@@ -2,6 +2,29 @@
 
 :+1: First off, thanks for taking the time to contribute to our little effort here...
 
+## Table of Contents
+
+* [Code of Conduct](#code-of-conduct)
+* [How can I contribute](#how-can-i-contribute)
+  * [Test cases](#test-cases)
+  * [Scraper module for unsupported routers](#scraper-module-for-unsupported-routers)
+  * [Code structure and Readability](#code-structure-and-readability)
+  * [Documentation](#documentation)
+  * [Publishing dependencies](#publishing-dependencies)
+* [Code setup](#code-setup)
+  * [Local Repo setup](#local-repo-setup)
+  * [Prerequisites](#prerequisites)
+  * [IDE setup for IntelliJ IDEA](#ide-setup-for-intellij-idea)
+    * [Main repo and plugins setup](#main-repo-and-plugins-setup)
+    * [Dependency repo setup](#dependency-repo-setup)
+  * [Code formatting guidelines](#code-formatting-guidelines)
+* [Pull Requests](#pull-requests)
+  * [What's this PR for?](#whats-this-pr-for)
+  * [What to emphasize on when reviewing?](#what-to-emphasize-on-when-reviewing)
+  * [Linked Pull Requests](#linked-pull-requests)
+  * [Requesting a review](#requesting-a-review)
+* [Happy coding!](#happy-coding)
+
 ---
 ---
 
@@ -23,7 +46,7 @@ to be done. Following are the central categories where you could help.
 Project Tauro's first commit has had minimal test case coverage. For a stable release, this is what we need first. The 
 idea is to extensively use Mockito.
 
-### Scraper module for unsupported router
+### Scraper module for unsupported routers
 
 If you own (or have access to) a router that isn't supported, you could write a scraping module for it. All scrapers 
 are in the package: `org.koreops.tauro.cli.scraper`. Before going ahead with writing one, check if the existing scrapers
@@ -40,6 +63,13 @@ refactoring the code to be more readable would be helpful.
 A lot of documentation also needs to be done before the first major release. For example, IDE setups as will be 
 described later in this document. Also, you could add graphical help for the steps that require clicking and navigating
 through UI components in, for example, IDEs.
+
+### Publishing dependencies
+
+Project-Tauro depends on 3 other repos. Right now, the author has no idea how to publish those to k0r0pt's Bintray 
+jcenter artifactory. You could point the author to a tutorial/manual on how to do it. The existing documentation from 
+bintray and travis don't exactly specify how the json descriptor is generated. As long as this isn't complete, the build
+for Project-Tauro will keep failing on [Travis CI](http://travis-ci.org/).
 
 ---
 ---

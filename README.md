@@ -30,6 +30,13 @@ data as well as the BSSID from vulnerable routers, thereby capable of producing 
   * [Prerequisites](#prerequisites)
   * [Installing dependency packages](#installing-dependency-packages)
   * [Installing Tauro](#installing-tauro)
+* [Database setup](#database-setup)
+* [Usage](#usage)
+  * [Usage output](#usage-output)
+  * [Example usages](#example-usages)
+   * [Host specification](#host-specification)
+   * [Port specification](#port-specification)
+   * [Process state tracking](#process-state-tracking)
 * [License](#license)
 * [We need your help!](#we-need-your-help)
 
