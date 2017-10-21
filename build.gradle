@@ -1,0 +1,26 @@
+group 'org.k0r0pt.routers'
+version '1.0-SNAPSHOT'
+
+apply from: 'build_config/tasks.gradle'
+// apply from: 'dependencies.gradle'
+
+apply plugin: 'application'
+mainClassName = "org.koreops.tauro.cli.TauroMain"
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // compile 'commons-codec:commons-codec:1.9'
+    // compile 'org.apache.commons:commons-collections4:4.1'
+    // compile 'org.apache.logging.log4j:log4j-api:2.9.1'
+    // compile 'org.apache.logging.log4j:log4j-core:2.9.1'
+    compile 'commons-cli:commons-cli:1.4'
+    compile('org.k0r0pt:netutils:1.0-SNAPSHOT') {
+        changing = true
+    }
+    compile('org.k0r0pt:tauro-core:1.0-SNAPSHOT') {
+        changing = true
+    }
+    compile('org.k0r0pt.routers:romdecoder:1.0-SNAPSHOT') {
+        changing = true
+    }
+}
