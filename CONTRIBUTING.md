@@ -150,6 +150,12 @@ and for that of Project-Tauro will look like this:
 k0r0pt/rom0Decoder: k0r0pt/rom0Decoder#5
 
 ---
+
+### Requesting a review
+
+You can request the core team - [k0r3](https://github.com/orgs/k0r0pt/teams/k0r3) when requesting PR reviews.
+
+---
 ---
 
 ## Happy coding!
