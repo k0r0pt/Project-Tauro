@@ -6,8 +6,6 @@
 A Router WiFi key recovery tool with a twist.
 
 ---
-
-
 ---
 
 Tauro is a router [WiFi](https://en.wikipedia.org/wiki/Wi-Fi) password scraping tool.
@@ -34,9 +32,10 @@ data as well as the BSSID from vulnerable routers, thereby capable of producing 
 * [Usage](#usage)
   * [Usage output](#usage-output)
   * [Example usages](#example-usages)
-   * [Host specification](#host-specification)
-   * [Port specification](#port-specification)
-   * [Process state tracking](#process-state-tracking)
+    * [Host specification](#host-specification)
+    * [Port specification](#port-specification)
+    * [Process state tracking](#process-state-tracking)
+* [Logs](#logs)
 * [License](#license)
 * [We need your help!](#we-need-your-help)
 
@@ -59,6 +58,8 @@ Of course, the name was decided upon in October of 2017...
 
 In late 2017, the author decided to make this software open source, believing it will help pen-testers and researchers 
 in their endeavors, while also garnering support for the development of Project Tauro.
+
+P.S. No neighbor's router was harmed (hacked) in the making of this software.
 
 ## Installation/Building
 
@@ -107,7 +108,11 @@ operating system and append the Tauro installation path at the end of that.
 ## Database setup
 
 Project-Tauro uses a database to store all scrape WiFi information. For this, the database will have to be copied over 
-to a pre-specified location. We don't yet have an option to specify that location from command-line. Follow these steps:
+to a pre-specified location. We don't yet have an option to specify that location from command-line.
+
+Although, it can be specified with Java System Property -Dtauro.core.db=<DB_Location> while calling the program.
+
+Follow these steps to set it up:
 
 1. Make this directory structure in your home folder: `.h4X0r/k0r0pt/db`. In *nix, *nux, your home folder will be at 
    `/home/<your-username>`. In MacOS, your home folder will be at `/Users/<your-username>`. In Windows, your home folder
@@ -167,6 +172,12 @@ port # 8080, which is where the -p or --port option comes in handy. For example,
 Tauro tracks the process state and has a resume option if the process is interrupted and is unable to complete a scan 
 for some reason. Say, in case of a power outage. In that case, use the -r or --resume cli option to resume a previously
 interrupted scan. For example, `Project-Tauro --resume`
+
+## Logs
+
+The logs are by default stored in `/.h4X0r/k0r0pt/logs` in your home directory. The log file also doesn't have an 
+explicit CLI option, but you can use Java System Property argument `-Dtauro.core.logFile=<your-log-file>` to specify 
+your own value for the log file, complete with the entire path to it.
 
 ## License
 

@@ -30,8 +30,9 @@
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [k0r0pt Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are 
-expected to uphold this code.
+This project and everyone participating in it is governed by the [k0r0pt Code of Conduct](CODE_OF_CONDUCT.md). By 
+participating, you are expected to uphold this code. You can report violations to the code of conduct to 
+[@sudiptosarkarX](https://twitter.com/sudiptosarkarX).
 
 ---
 ---
