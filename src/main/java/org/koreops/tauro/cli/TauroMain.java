@@ -40,6 +40,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 /**
  * The main class for Basic Auth Default login scraper.
@@ -78,7 +79,9 @@ public class TauroMain {
     this.port = port;
     attackExecutorService = Executors.newFixedThreadPool(poolSize);
     // Let's get the exclusion hosts (parsing CIDR ranges and stuff).
-    exclusions = generateHosts(exclusions, null);
+    if (exclusions != null && !exclusions.isEmpty()) {
+      exclusions = generateHosts(exclusions, null);
+    }
   }
 
   /**
@@ -169,7 +172,12 @@ public class TauroMain {
     Logger.finalizeLogging();
     ProcessManager.finalizeProcessLogging(true);
 
-    Mailer.sendEmail("sudiptosarkar@visioplanet.org", "Done.", "Done.");
+    try {
+      Mailer.sendEmail("sudiptosarkar@visioplanet.org", "Done.", "Done.");
+    } catch (Exception e) {
+      Logger.error("Failed to send notification email. Continuing...", true);
+      java.util.logging.Logger.getLogger(TauroMain.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+    }
   }
 
   private static void usage() {
