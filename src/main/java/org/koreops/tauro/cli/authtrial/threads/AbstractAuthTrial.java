@@ -46,6 +46,7 @@ public abstract class AbstractAuthTrial extends Thread {
     // Seems like this was the password in many new BSNL setups. Thanks Rom-0.
     CREDENTIALS_LIST.add(new Credentials("admin", "bsnl2015"));
     CREDENTIALS_LIST.add(new Credentials("tw_admin", "tw_admin"));
+    CREDENTIALS_LIST.add(new Credentials("admin", "admin99"));
     CREDENTIALS_LIST.add(new Credentials("admin", ""));
   }
 
