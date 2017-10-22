@@ -152,20 +152,20 @@ Project-Tauro usage:
 As specified in the output above, Project-Tauro can use different ways of specifying which hosts to attack (scrape).
 
 1. Direct host specification - use the -h or --hosts CLI option. This lets you specify which hosts to go after right 
-   from the program invocation. For example, `Project-Tauro --hosts 172.168.0.0-172.168.255.255 8.8.8.8 8.8.8.4 10.0.0.1/8 --isp RandomISP`.
+   from the program invocation. For example, `Project-Tauro --hosts=172.168.0.0-172.168.255.255 8.8.8.8 8.8.8.4 10.0.0.1/8 --isp=RandomISP`.
    Note, that Project-Tauro works just fine with IP Ranges specified with hyphens and CIDR IP Ranges.
 2. [ipinfo.io](ipinfo.io) based host specification - use the -n or --network CLI option. This lets you specify an entire
-   network (say if you want to attack an entire ISP). For example, `Project-Tauro --network AS0000 --isp RandomISP`
+   network (say if you want to attack an entire ISP). For example, `Project-Tauro --network=AS0000 --isp=RandomISP`
 3. [Masscan](https://github.com/robertdavidgraham/masscan) JSON output file based host specification - use the -f or 
    --hostsFile CLI option. This lets you specify a Masscan JSON output file. Other masscan output formats are not yet 
-   supported (but with your help they will be). For example, `Project-Tauro --hostsFile /home/user/superOut.json --isp RandomISP`
+   supported (but with your help they will be). For example, `Project-Tauro --hostsFile=/home/user/superOut.json --isp=RandomISP`
    
 #### Port specification
 
 By default, Project-Tauro will assume port # 80 if no port is explicitly specified. That's because that's the default 
 [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) port. However, many routers nowadays are hosting at 
 port # 8080, which is where the -p or --port option comes in handy. For example,
-`Project-Tauro --hosts 192.168.1.1/24 --port 8080 --isp RandomISP`
+`Project-Tauro --hosts=192.168.1.1/24 --port=8080 --isp=RandomISP`
 
 #### Process state tracking
 
