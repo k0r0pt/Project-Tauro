@@ -295,6 +295,10 @@ public class TauroMain {
     for (String host : hosts) {
 
       try {
+        if (host == null) {
+          continue;
+        }
+
         if (host.contains("/")) {
           CidrUtils cidr = new CidrUtils(host);
           host = cidr.getNetworkAddress();
