@@ -52,12 +52,14 @@ public abstract class AbstractScraper {
   protected final List oldDigiflipTitles;
   protected final List coshipTitles;
   protected final List beamTitles;
+  protected final List iballWrx300NTitles;
 
   private static final String[] newTpLinkTitlesArr = {"TL-WR740N", "TP-LINK", "TL-WR841N", "TL-MR3420"};
   private static final String[] newDigiflipTitlesArr = {"Digiflip WiFi Webserver"};
   private static final String[] oldDigiflipTitlesArr = {"Setting router"};
   private static final String[] coshipTitlesArr = {"Wireless Route Module Web Server"};
   private static final String[] beamTitlesArr = {"BEAM AP", "ACT AP"};
+  private static final String[] iBallWrx300NArr = {"iB-WRX300N"};
 
   /**
    * AbstractScraper Constructor.
@@ -77,6 +79,7 @@ public abstract class AbstractScraper {
     oldDigiflipTitles = Arrays.asList(oldDigiflipTitlesArr);
     coshipTitles = Arrays.asList(coshipTitlesArr);
     beamTitles = Arrays.asList(beamTitlesArr);
+    iballWrx300NTitles = Arrays.asList(iBallWrx300NArr);
   }
 
   /**

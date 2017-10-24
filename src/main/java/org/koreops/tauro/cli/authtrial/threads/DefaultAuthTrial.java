@@ -30,6 +30,7 @@ import org.koreops.tauro.cli.scraper.basicauth.BinatoneScraper;
 import org.koreops.tauro.cli.scraper.basicauth.CoshipScraper;
 import org.koreops.tauro.cli.scraper.basicauth.DLinkScraper;
 import org.koreops.tauro.cli.scraper.basicauth.DigiflipScraper;
+import org.koreops.tauro.cli.scraper.basicauth.IBallWrx300NScraper;
 import org.koreops.tauro.cli.scraper.basicauth.NewIBallBatonScraper;
 import org.koreops.tauro.cli.scraper.basicauth.NewTpLinkScraper;
 import org.koreops.tauro.cli.scraper.basicauth.TpLinkScraper;
@@ -174,6 +175,13 @@ public class DefaultAuthTrial extends AbstractAuthTrial {
 
     System.out.println("Trying COSHIP Scraper.");
     scraper = new CoshipScraper(host, hostUrl, params);
+    success = scraper.scrape();
+    if (success) {
+      return;
+    }
+
+    System.out.println("Trying iBall iB-WRX300N Scraper.");
+    scraper = new IBallWrx300NScraper(host, hostUrl, params);
     success = scraper.scrape();
     if (success) {
       return;
