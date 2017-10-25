@@ -1,0 +1,9 @@
+ext {
+    libraryVersions = [
+            commonsCli            :    '1.4',
+            junit                 :    '4.12',
+            netutils              :    '1.0.0',
+            tauroCore             :    '1.0.0',
+            romdecoder            :    '1.0.0'
+    ]
+}
