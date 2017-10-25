@@ -10,7 +10,6 @@
   * [Scraper module for unsupported routers](#scraper-module-for-unsupported-routers)
   * [Code structure and Readability](#code-structure-and-readability)
   * [Documentation](#documentation)
-  * [Publishing dependencies](#publishing-dependencies)
 * [Code setup](#code-setup)
   * [Local Repo setup](#local-repo-setup)
   * [Prerequisites](#prerequisites)
@@ -64,13 +63,6 @@ refactoring the code to be more readable would be helpful.
 A lot of documentation also needs to be done before the first major release. For example, IDE setups as will be 
 described later in this document. Also, you could add graphical help for the steps that require clicking and navigating
 through UI components in, for example, IDEs.
-
-### Publishing dependencies
-
-Project-Tauro depends on 3 other repos. Right now, the author has no idea how to publish those to k0r0pt's Bintray 
-jcenter artifactory. You could point the author to a tutorial/manual on how to do it. The existing documentation from 
-bintray and travis don't exactly specify how the json descriptor is generated. As long as this isn't complete, the build
-for Project-Tauro will keep failing on [Travis CI](http://travis-ci.org/).
 
 ---
 ---
