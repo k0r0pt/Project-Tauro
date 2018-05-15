@@ -15,12 +15,6 @@
 
 package org.koreops.tauro.cli;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
 import org.koreops.net.def.beans.Host;
 import org.koreops.net.utils.CidrUtils;
 import org.koreops.net.utils.IpInfoScraper;
@@ -28,6 +22,7 @@ import org.koreops.net.utils.MasscanJsonParser;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.authtrial.threads.FormAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
+import org.koreops.tauro.cli.opts.processor.CliOptsProcessor;
 import org.koreops.tauro.core.loggers.Logger;
 import org.koreops.tauro.core.process.ProcessManager;
 import org.koreops.tauro.core.process.status.reporting.Mailer;
@@ -36,6 +31,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,32 +45,16 @@ import java.util.logging.Level;
  */
 public class TauroMain {
 
-  private static final Options options;
   private static List<String> exclusions;
   private static final int poolSize = 100;
   private int totalDone = 0;
-
-  static {
-    options = (new Options());
-    options.addOption("f", "hostsFile", true, "The JSON formatted file from which hosts' list needs to be read.");
-    options.addOption("i", "isp", true, "The ISP the hosts are registered under");
-    Option hostsOption = new Option("h", "hosts", true, "A space separated list of hosts/CIDR networks to be scanned/attacked.");
-    hostsOption.setArgs(Integer.MAX_VALUE);
-    options.addOption(hostsOption);
-    options.addOption("n", "network", true, "The ipinfo.io network that needs to be scanned.");
-    options.addOption("p", "port", true, "The is the port to be targeted (Multiple port support will be coming later.");
-    Option exclusionsOption = new Option("e", "exclusions", true, "A space separated list of hosts to be excluded from attacks.");
-    exclusionsOption.setArgs(Integer.MAX_VALUE);
-    options.addOption(exclusionsOption);
-    options.addOption("r", "resume", false, "Resume previous scan.");
-  }
 
   private final List<String> hosts;
   private final String port;
   private static final int BATCH_SIZE = 256;
   private final ExecutorService attackExecutorService;
 
-  private TauroMain(List<String> hosts, String port) throws UnknownHostException {
+  private TauroMain(List<String> hosts, String port) {
     this.hosts = hosts;
     this.port = port;
     attackExecutorService = Executors.newFixedThreadPool(poolSize);
@@ -100,57 +80,53 @@ public class TauroMain {
     }));
 
     if (args.length < 1) {
-      usage();
+      CliOptsProcessor.usage();
     }
     TauroMain mainObject;
-
-    CommandLineParser commandLineParser = new DefaultParser();
-    CommandLine commandLine = commandLineParser.parse(options, args);
 
     String[] hosts;
     String isp;
 
-    if (commandLine.hasOption("resume")) {
+    Map<String, String> options = CliOptsProcessor.processOptions(args);
+
+    if (options.containsKey(CliOptsProcessor.resumeOptVal)) {
       args = ProcessManager.getArgs();
+      options = CliOptsProcessor.processOptions(args);
     } else {
       ProcessManager.saveArgs(args);
     }
 
-    commandLine = commandLineParser.parse(options, args);
-
-    if (commandLine.hasOption("isp")) {
-      isp = commandLine.getOptionValue("isp");
+    if (options.containsKey(CliOptsProcessor.ispOptVal)) {
+      isp = options.get(CliOptsProcessor.ispOptVal);
       UpdaterDao.setIsp(isp);
     } else {
-      usage();
+      CliOptsProcessor.usage();
       return;
     }
 
     String port = null;
-    if (commandLine.hasOption("port")) {
-      port = commandLine.getOptionValue("port");
+    if (options.containsKey(CliOptsProcessor.portOptVal)) {
+      port = options.get(CliOptsProcessor.portOptVal);
     }
 
-    if (commandLine.hasOption("hostsFile")) {
-      hosts = MasscanJsonParser.parseHosts(commandLine.getOptionValue("hostsFile"), port);
-    } else if (commandLine.hasOption("network")) {
-      String netId = commandLine.getOptionValue("network");
+    if (options.containsKey(CliOptsProcessor.hostsFileOptVal)) {
+      hosts = MasscanJsonParser.parseHosts(options.get(CliOptsProcessor.hostsFileOptVal), port);
+    } else if (options.containsKey(CliOptsProcessor.networkOptVal)) {
+      String netId = options.get(CliOptsProcessor.networkOptVal);
       hosts = new IpInfoScraper(netId).getNetRanges();
-    } else if (commandLine.hasOption("hosts")) {
-      hosts = commandLine.getOptionValues("hosts");
+    } else if (options.containsKey(CliOptsProcessor.hostsOptVal)) {
+      hosts = options.get(CliOptsProcessor.hostsOptVal).split(",");
     } else {
-      usage();
+      CliOptsProcessor.usage();
       return;
     }
 
-    if (commandLine.hasOption("exclusions")) {
-      String[] exclusionsArr = commandLine.getOptionValues("exclusions");
-      if (exclusionsArr != null) {
-        exclusions = Arrays.asList(exclusionsArr);
-      }
+    if (options.containsKey(CliOptsProcessor.exclusionsOptVal)) {
+      String[] exclusionsArr = options.get(CliOptsProcessor.exclusionsOptVal).split(",");
+      exclusions = Arrays.asList(exclusionsArr);
     }
 
-    if (commandLine.hasOption("resume")) {
+    if (options.containsKey(CliOptsProcessor.resumeOptVal)) {
       if (exclusions == null) {
         exclusions = new ArrayList<>();
       }
@@ -180,12 +156,6 @@ public class TauroMain {
     }
   }
 
-  private static void usage() {
-    HelpFormatter helpFormatter = new HelpFormatter();
-    helpFormatter.printHelp("Project-Tauro", "Project-Tauro usage:", options, "Project-Tauro");
-    System.exit(-1);
-  }
-
   private void scanAndAttackHosts() throws InterruptedException {
     List<String> hosts = generateHosts(this.hosts, exclusions);
 
@@ -197,7 +167,7 @@ public class TauroMain {
     List<String> checkedHosts = new ArrayList<>();
     int i = 0;
     for (String host : hosts) {
-      Callable<Host> authFinder = new FindHttpBasicAuthFinder(host, port);
+      Callable<Host> authFinder = new HttpBasicAuthFinder(host, port);
       futures.add(discoveryExecutorService.submit(authFinder));
       checkedHosts.add(host);
       i++;
