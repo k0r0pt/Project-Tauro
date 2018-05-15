@@ -2,20 +2,21 @@ group 'org.k0r0pt.routers'
 version '0.1.0'
 
 apply from: 'build_config/tasks.gradle'
+apply from: 'dependencies.gradle'
 
 apply plugin: 'application'
 mainClassName = "org.koreops.tauro.cli.TauroMain"
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'commons-cli:commons-cli:1.4'
-    compile('org.k0r0pt:netutils:1.0-SNAPSHOT') {
+    testCompile 'junit:junit:' + libraryVersions.junit
+    compile 'commons-cli:commons-cli:' + libraryVersions.commonsCli
+    compile('org.k0r0pt:netutils:' + libraryVersions.netutils) {
         changing = true
     }
-    compile('org.k0r0pt:tauro-core:1.0-SNAPSHOT') {
+    compile('org.k0r0pt:tauro-core:' + libraryVersions.tauroCore) {
         changing = true
     }
-    compile('org.k0r0pt.routers:romdecoder:1.0-SNAPSHOT') {
+    compile('org.k0r0pt.routers:romdecoder:' + libraryVersions.romdecoder) {
         changing = true
     }
 }

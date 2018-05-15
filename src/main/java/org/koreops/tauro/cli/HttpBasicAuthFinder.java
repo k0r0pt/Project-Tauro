@@ -41,12 +41,12 @@ import java.util.concurrent.Callable;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class FindHttpBasicAuthFinder implements Callable<Host> {
+public class HttpBasicAuthFinder implements Callable<Host> {
 
   private final String host;
   private final int port;
 
-  public FindHttpBasicAuthFinder(String host, String port) {
+  HttpBasicAuthFinder(String host, String port) {
     this.host = host;
     if (port != null) {
       this.port = Integer.valueOf(port);

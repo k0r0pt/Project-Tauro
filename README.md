@@ -132,11 +132,11 @@ If run without any arguments, Tauro will give you this output:
 
 ```
 Project-Tauro usage:
- -e,--exclusions <arg>   A space separated list of hosts to be excluded
+ -e,--exclusions <arg>   A comma separated list of hosts to be excluded
                          from attacks.
  -f,--hostsFile <arg>    The JSON formatted file from which hosts' list
                          needs to be read.
- -h,--hosts <arg>        A space separated list of hosts/CIDR networks to
+ -h,--hosts <arg>        A comma separated list of hosts/CIDR networks to
                          be scanned/attacked.
  -i,--isp <arg>          The ISP the hosts are registered under
  -n,--network <arg>      The ipinfo.io network that needs to be scanned.
@@ -152,7 +152,7 @@ Project-Tauro usage:
 As specified in the output above, Project-Tauro can use different ways of specifying which hosts to attack (scrape).
 
 1. Direct host specification - use the -h or --hosts CLI option. This lets you specify which hosts to go after right 
-   from the program invocation. For example, `Project-Tauro --hosts=172.168.0.0-172.168.255.255 8.8.8.8 8.8.8.4 10.0.0.1/8 --isp=RandomISP`.
+   from the program invocation. For example, `Project-Tauro --hosts=172.168.0.0-172.168.255.255,8.8.8.8,8.8.8.4,10.0.0.1/8 --isp=RandomISP`.
    Note, that Project-Tauro works just fine with IP Ranges specified with hyphens and CIDR IP Ranges.
 2. [ipinfo.io](ipinfo.io) based host specification - use the -n or --network CLI option. This lets you specify an entire
    network (say if you want to attack an entire ISP). For example, `Project-Tauro --network=AS0000 --isp=RandomISP`
