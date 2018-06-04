@@ -107,6 +107,7 @@ public class TauroMain {
       }
 
       new IpInfoScraper(options.get(CliOptsProcessor.networkOptVal)).printMasscanCommand(options.get(CliOptsProcessor.ispOptVal));
+      return;
     }
 
     if (options.containsKey(CliOptsProcessor.ispOptVal)) {
