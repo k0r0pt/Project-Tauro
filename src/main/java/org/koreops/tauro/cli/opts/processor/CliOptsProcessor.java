@@ -44,6 +44,7 @@ public class CliOptsProcessor {
   public static final String exclusionsOptVal = "exclusions";
   public static final String resumeOptVal = "resume";
   public static final String networkOptVal = "network";
+  public static final String genMasscanOptVal = "generateMasscanCommand";
 
   private static final String hostsOpt = "h";
   private static final String ispOpt = "i";
@@ -52,6 +53,7 @@ public class CliOptsProcessor {
   private static final String exclusionsOpt = "e";
   private static final String resumeOpt = "r";
   private static final String networkOpt = "n";
+  private static final String genMasscanOpt = "m";
 
   private static final Option hostsOption;
   private static final Option ispOption;
@@ -60,6 +62,7 @@ public class CliOptsProcessor {
   private static final Option exclusionsOption;
   private static final Option resumeOption;
   private static final Option networkOption;
+  private static final Option genMasscanOption;
 
   static {
     options = (new Options());
@@ -71,6 +74,7 @@ public class CliOptsProcessor {
     portOption = new Option(portOpt, portOptVal, true, "The is the port to be targeted (Multiple port support will be coming later.");
     exclusionsOption = new Option(exclusionsOpt, exclusionsOptVal, true, "A comma separated list of hosts to be excluded from attacks.");
     exclusionsOption.setArgs(Integer.MAX_VALUE);
+    genMasscanOption = new Option(genMasscanOpt, genMasscanOptVal, false, "Generate masscan command. Needs ipinfo network option specified.");
     resumeOption = new Option(resumeOpt, resumeOptVal, false, "Resume previous scan.");
 
     options.addOption(hostsFileOption);
@@ -79,6 +83,7 @@ public class CliOptsProcessor {
     options.addOption(networkOption);
     options.addOption(portOption);
     options.addOption(exclusionsOption);
+    options.addOption(genMasscanOption);
     options.addOption(resumeOption);
   }
 
@@ -95,7 +100,7 @@ public class CliOptsProcessor {
 
     Map<String, String> parsedOpts = new HashMap<>();
 
-    if (commandLine.hasOption(resumeOptVal) || commandLine.hasOption(resumeOpt)) {
+    if ((commandLine.getOptions().length == 1) && (commandLine.hasOption(resumeOptVal) || commandLine.hasOption(resumeOpt))) {
       parsedOpts.put(resumeOptVal, null);
     } else {
       if (commandLine.hasOption(ispOptVal) || commandLine.hasOption(ispOpt)) {
@@ -120,6 +125,10 @@ public class CliOptsProcessor {
 
       if (commandLine.hasOption(exclusionsOptVal) || commandLine.hasOption(exclusionsOpt)) {
         parsedOpts.put(exclusionsOptVal, getOptionValue(exclusionsOption, commandLine));
+      }
+
+      if (commandLine.hasOption(genMasscanOptVal) || commandLine.hasOption(genMasscanOpt)) {
+        parsedOpts.put(genMasscanOptVal, getOptionValue(genMasscanOption, commandLine));
       }
     }
 

@@ -81,6 +81,7 @@ public class TauroMain {
 
     if (args.length < 1) {
       CliOptsProcessor.usage();
+      return;
     }
     TauroMain mainObject;
 
@@ -93,7 +94,19 @@ public class TauroMain {
       args = ProcessManager.getArgs();
       options = CliOptsProcessor.processOptions(args);
     } else {
-      ProcessManager.saveArgs(args);
+      if (!options.containsKey(CliOptsProcessor.genMasscanOptVal)) {
+        ProcessManager.saveArgs(args);
+      }
+    }
+
+    if (options.containsKey(CliOptsProcessor.genMasscanOptVal)) {
+      if (!options.containsKey(CliOptsProcessor.networkOptVal)) {
+        Logger.error("masscan generation is currently only supported for ipinfo networks.", true);
+        CliOptsProcessor.usage();
+        return;
+      }
+
+      new IpInfoScraper(options.get(CliOptsProcessor.networkOptVal)).printMasscanCommand(options.get(CliOptsProcessor.ispOptVal));
     }
 
     if (options.containsKey(CliOptsProcessor.ispOptVal)) {
@@ -253,7 +266,9 @@ public class TauroMain {
     Logger.info("All attack threads done.", true);
 
     for (String host : checkedHosts) {
-      ProcessManager.writeOffHost(host);
+      if (host != null) {
+        ProcessManager.writeOffHost(host);
+      }
     }
 
     Logger.info("Time to start next batch.", true);
