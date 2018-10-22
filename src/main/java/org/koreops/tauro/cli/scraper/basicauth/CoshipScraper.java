@@ -32,6 +32,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
+import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -102,7 +103,7 @@ public class CoshipScraper extends AbstractScraper {
       List<Map<String, String>> wifiDataList = this.fetchDetails(macAddr);
 
       for (Map<String, String> m : wifiDataList) {
-        UpdaterDao.saveStation(m, host);
+        UpdaterDao.saveStation(m, host, DbConnEngine.getConnection());
       }
       return true;
     } catch (IOException ex) {

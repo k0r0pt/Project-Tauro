@@ -8,7 +8,6 @@ apply plugin: 'application'
 mainClassName = "org.koreops.tauro.cli.TauroMain"
 
 dependencies {
-    testCompile 'junit:junit:' + libraryVersions.junit
     compile 'commons-cli:commons-cli:' + libraryVersions.commonsCli
     compile('org.k0r0pt:netutils:' + libraryVersions.netutils) {
         changing = true
@@ -19,4 +18,8 @@ dependencies {
     compile('org.k0r0pt.routers:romdecoder:' + libraryVersions.romdecoder) {
         changing = true
     }
+
+    testCompile 'junit:junit:' + libraryVersions.junit
+    testCompile 'org.codehaus.groovy:groovy-all:' + libraryVersions.groovy
+    testCompile 'org.spockframework:spock-core:' + libraryVersions.spock
 }

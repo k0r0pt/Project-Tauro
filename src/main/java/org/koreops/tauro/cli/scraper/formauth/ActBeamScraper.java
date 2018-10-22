@@ -23,6 +23,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
+import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -194,7 +195,7 @@ public class ActBeamScraper extends AbstractScraper {
         Logger.info(host + ": Found SSID: " + wifiData.get("SSID"));
         Logger.info(host + ": Found AuthType: " + wifiData.get("AuthType"));
         Logger.info(host + ": Found Encryption: " + wifiData.get("Encryption"));
-        UpdaterDao.saveStation(wifiData, host);
+        UpdaterDao.saveStation(wifiData, host, DbConnEngine.getConnection());
       }
 
       return true;

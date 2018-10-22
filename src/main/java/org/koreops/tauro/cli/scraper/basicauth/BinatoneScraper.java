@@ -25,6 +25,7 @@ import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
 import org.koreops.tauro.cli.scraper.exception.WirelessDisabledException;
+import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -87,7 +88,7 @@ public class BinatoneScraper extends AbstractScraper {
         }
 
         for (Map<String, String> wifiData : wifiDataList) {
-          UpdaterDao.saveStation(wifiData, host);
+          UpdaterDao.saveStation(wifiData, host, DbConnEngine.getConnection());
         }
       } catch (WirelessDisabledException ex) {
         Logger.error(host + ex.getMessage());

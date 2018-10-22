@@ -15,7 +15,6 @@
 
 package org.koreops.tauro.cli.dao;
 
-import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -33,6 +32,13 @@ import java.util.Map;
 public class UpdaterDao {
   private static String isp;
 
+  public static final String FIND_STATION_SQL_STATEMENT =
+          "Select * from WirelessStations where lower(BSSID) = lower(?) and SSID = ?";
+  public static final String UPDATE_STATION_SQL_STATEMENT =
+          "Update WirelessStations set Protocol = ?, Key = ?, ISP = ?, Phone = ? where BSSID = ? and SSID = ?";
+  public static final String INSERT_STATION_SQL_STATEMENT =
+          "Insert into WirelessStations(BSSID, SSID, Protocol, Key, ISP, Phone) values(?, ?, ?, ?, ?, ?)";
+
   /**
    * Saves scraped Wifi station to the database.
    *
@@ -40,14 +46,10 @@ public class UpdaterDao {
    * @param host                The Host for which the data is being saved (Will be used for logging purposes)
    * @throws DbDriverException  In case of a JDBC Driver related problem (unlikely to happen).
    */
-  public static synchronized void saveStation(Map<String, String> wifiData, String host) throws DbDriverException {
+  public static synchronized void saveStation(Map<String, String> wifiData, String host, Connection conn) throws DbDriverException {
     try {
       boolean stationExists;
-      Connection conn;
-      conn = DbConnEngine.getConnection();
-      String sql;
-      sql = "Select * from WirelessStations where lower(BSSID) = lower(?) and SSID = ?";
-      PreparedStatement stmt = conn.prepareStatement(sql);
+      PreparedStatement stmt = conn.prepareStatement(FIND_STATION_SQL_STATEMENT);
       stmt.setString(1, wifiData.get("BSSID"));
       stmt.setString(2, wifiData.get("SSID"));
       ResultSet rs = stmt.executeQuery();
@@ -56,8 +58,7 @@ public class UpdaterDao {
       stmt.close();
 
       if (stationExists) {
-        sql = "Update WirelessStations set Protocol = ?, Key = ?, ISP = ?, Phone = ? where BSSID = ? and SSID = ?";
-        PreparedStatement stmt0 = conn.prepareStatement(sql);
+        PreparedStatement stmt0 = conn.prepareStatement(UPDATE_STATION_SQL_STATEMENT);
         String protocol = null;
         if ((wifiData.get("AuthType") != null) && (wifiData.get("Encryption") != null)) {
           // Protected network.
@@ -79,8 +80,7 @@ public class UpdaterDao {
         stmt0.execute();
         Logger.info(host + ": " + wifiData.get("BSSID") + " - " + wifiData.get("SSID") + " updated...");
       } else {
-        sql = "Insert into WirelessStations(BSSID, SSID, Protocol, Key, ISP, Phone) values(?, ?, ?, ?, ?, ?)";
-        PreparedStatement stmt0 = conn.prepareStatement(sql);
+        PreparedStatement stmt0 = conn.prepareStatement(INSERT_STATION_SQL_STATEMENT);
         String protocol = null;
         if ((wifiData.get("AuthType") != null) && (wifiData.get("Encryption") != null)) {
           // Protected network.

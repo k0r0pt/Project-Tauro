@@ -24,6 +24,7 @@ import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
+import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -82,7 +83,7 @@ public class DLinkScraper extends AbstractScraper {
       }
       wifiData.put("BSSID", macAddr.toLowerCase());
 
-      UpdaterDao.saveStation(wifiData, host);
+      UpdaterDao.saveStation(wifiData, host, DbConnEngine.getConnection());
       return true;
     } catch (HttpStatusException ex) {
       if ((ex.getStatusCode() != 404) && (ex.getStatusCode() != 501)) {

@@ -1,9 +1,11 @@
 ext {
     libraryVersions = [
             commonsCli            :    '1.4',
-            junit                 :    '4.12',
             netutils              :    '1.0.0',
             tauroCore             :    '1.0.0',
-            romdecoder            :    '1.0.0'
+            romdecoder            :    '1.0.0',
+            junit                 :    '4.12',
+            groovy                :    '2.4.15',
+            spock                 :    '1.2-groovy-2.4',
     ]
 }
