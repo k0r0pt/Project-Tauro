@@ -17,7 +17,6 @@ package org.koreops.tauro.cli.scraper.basicauth;
 
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -31,8 +30,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
-import org.koreops.tauro.core.exceptions.DbDriverException;
+import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.BufferedReader;
@@ -48,18 +46,18 @@ import java.util.Map;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class CoshipScraper extends AbstractScraper {
+public class CoshipScraper extends AbstractScrapperAndSaver {
 
-  public CoshipScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+  public CoshipScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return this.logCoshipStation();
   }
 
-  private boolean logCoshipStation() throws DbDriverException {
+  private boolean logCoshipStation() {
     try {
 
       Document doc = Jsoup.connect(hostUrl).userAgent(USER_AGENT).header("Authorization", "Basic " + base64Login).timeout(60000).get();
@@ -102,7 +100,7 @@ public class CoshipScraper extends AbstractScraper {
       List<Map<String, String>> wifiDataList = this.fetchDetails(macAddr);
 
       for (Map<String, String> m : wifiDataList) {
-        UpdaterDao.saveStation(m, host);
+        updaterDao.saveStation(m, host);
       }
       return true;
     } catch (IOException ex) {
@@ -111,8 +109,6 @@ public class CoshipScraper extends AbstractScraper {
       Logger.error(host + ": FailingHttpStatusCodeException during getWirelessData(): " + ex.getMessage() + " ::::::: " + ex.toString());
     } catch (ElementNotFoundException ex) {
       Logger.error(host + ": ElementNotFoundException during getWirelessData(): " + ex.getMessage() + " ::::::: " + ex.toString());
-    } catch (DbDriverException ex) {
-      throw ex;
     } catch (Exception ex) {
       Logger.error(host + ": Exception during getWirelessData(): " + ex.getMessage() + " ::::::: " + ex.toString());
     }

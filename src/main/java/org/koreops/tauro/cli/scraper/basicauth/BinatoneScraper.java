@@ -23,9 +23,8 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
+import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
 import org.koreops.tauro.cli.scraper.exception.WirelessDisabledException;
-import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -39,14 +38,13 @@ import java.util.logging.Level;
  * Scraper module for Binatone routers.
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class BinatoneScraper extends AbstractScraper {
-
-  public BinatoneScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+public class BinatoneScraper extends AbstractScrapperAndSaver {
+  public BinatoneScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return this.logWirelessStation(hostUrl, base64Login);
   }
 
@@ -57,7 +55,7 @@ public class BinatoneScraper extends AbstractScraper {
    * @param hostUrl     The complete URL, including the port number, protocol etc
    * @param base64Login The base64 login header
    */
-  private boolean logWirelessStation(String hostUrl, String base64Login) throws DbDriverException {
+  private boolean logWirelessStation(String hostUrl, String base64Login) {
     try {
       String macAddr = null;
       String devInfoUrl = hostUrl + "status/status_deviceinfo.htm";
@@ -87,7 +85,7 @@ public class BinatoneScraper extends AbstractScraper {
         }
 
         for (Map<String, String> wifiData : wifiDataList) {
-          UpdaterDao.saveStation(wifiData, host);
+          updaterDao.saveStation(wifiData, host);
         }
       } catch (WirelessDisabledException ex) {
         Logger.error(host + ex.getMessage());
@@ -102,8 +100,6 @@ public class BinatoneScraper extends AbstractScraper {
     } catch (IOException ex) {
       Logger.error(host + ": IOException during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (DbDriverException ex) {
-      throw ex;
     } catch (Exception ex) {
       Logger.error(host + ": Exception during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);

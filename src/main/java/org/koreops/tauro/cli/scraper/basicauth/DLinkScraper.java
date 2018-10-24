@@ -23,8 +23,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
-import org.koreops.tauro.core.exceptions.DbDriverException;
+import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -37,18 +36,18 @@ import java.util.logging.Level;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class DLinkScraper extends AbstractScraper {
+public class DLinkScraper extends AbstractScrapperAndSaver {
 
-  public DLinkScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+  public DLinkScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return this.logDLinkWirelessStation(hostUrl, base64Login);
   }
 
-  private boolean logDLinkWirelessStation(String hostUrl, String base64Login) throws DbDriverException {
+  private boolean logDLinkWirelessStation(String hostUrl, String base64Login) {
     try {
       String macAddr = null;
       String devInfoUrl = hostUrl + "info.html";
@@ -82,7 +81,7 @@ public class DLinkScraper extends AbstractScraper {
       }
       wifiData.put("BSSID", macAddr.toLowerCase());
 
-      UpdaterDao.saveStation(wifiData, host);
+      updaterDao.saveStation(wifiData, host);
       return true;
     } catch (HttpStatusException ex) {
       if ((ex.getStatusCode() != 404) && (ex.getStatusCode() != 501)) {
@@ -91,8 +90,6 @@ public class DLinkScraper extends AbstractScraper {
     } catch (IOException ex) {
       Logger.error(host + ": IOException during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (DbDriverException ex) {
-      throw ex;
     } catch (Exception ex) {
       Logger.error(host + ": Exception during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);

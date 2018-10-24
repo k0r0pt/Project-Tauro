@@ -22,8 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
-import org.koreops.tauro.core.exceptions.DbDriverException;
+import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -38,18 +37,19 @@ import java.util.Map;
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  * @since 26 Sep, 2017 8:24 PM
  */
-public class ActBeamScraper extends AbstractScraper {
+public class ActBeamScraper extends AbstractScrapperAndSaver {
 
-  public ActBeamScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+
+  public ActBeamScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return logActBeamWifi();
   }
 
-  private boolean logActBeamWifi() throws DbDriverException {
+  private boolean logActBeamWifi() {
     String url = hostUrl + "cgi-bin/webproc";
     try {
       Connection.Response response = Jsoup.connect(url)
@@ -194,7 +194,7 @@ public class ActBeamScraper extends AbstractScraper {
         Logger.info(host + ": Found SSID: " + wifiData.get("SSID"));
         Logger.info(host + ": Found AuthType: " + wifiData.get("AuthType"));
         Logger.info(host + ": Found Encryption: " + wifiData.get("Encryption"));
-        UpdaterDao.saveStation(wifiData, host);
+        updaterDao.saveStation(wifiData, host);
       }
 
       return true;
