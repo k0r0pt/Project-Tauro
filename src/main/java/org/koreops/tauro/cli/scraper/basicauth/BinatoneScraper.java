@@ -23,7 +23,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.cli.scraper.exception.WirelessDisabledException;
 import org.koreops.tauro.core.loggers.Logger;
 
@@ -38,7 +38,7 @@ import java.util.logging.Level;
  * Scraper module for Binatone routers.
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class BinatoneScraper extends AbstractScrapperAndSaver {
+public class BinatoneScraper extends AbstractScraperAndSaver {
   public BinatoneScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
     super(host, hostUrl, params, updaterDao);
   }

@@ -22,7 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  * @since 26 Sep, 2017 8:24 PM
  */
-public class ActBeamScraper extends AbstractScrapperAndSaver {
+public class ActBeamScraper extends AbstractScraperAndSaver {
 
 
   public ActBeamScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {

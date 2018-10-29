@@ -23,7 +23,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.logging.Level;
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  * @since 24 Oct, 2017 10:56 PM
  */
-public class IBallWrx300NScraper extends AbstractScrapperAndSaver {
+public class IBallWrx300NScraper extends AbstractScraperAndSaver {
 
   public IBallWrx300NScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
     super(host, hostUrl, params, updaterDao);

@@ -30,7 +30,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.BufferedReader;
@@ -46,7 +46,7 @@ import java.util.Map;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class CoshipScraper extends AbstractScrapperAndSaver {
+public class CoshipScraper extends AbstractScraperAndSaver {
 
   public CoshipScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
     super(host, hostUrl, params, updaterDao);

@@ -24,7 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScrapperAndSaver;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.util.logging.Level;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class DigiflipScraper extends AbstractScrapperAndSaver {
+public class DigiflipScraper extends AbstractScraperAndSaver {
 
   public DigiflipScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
     super(host, hostUrl, params, updaterDao);
