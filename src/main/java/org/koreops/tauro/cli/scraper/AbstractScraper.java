@@ -17,11 +17,8 @@ package org.koreops.tauro.cli.scraper;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
-
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.net.utils.ReachabilityUtil;
-import org.koreops.tauro.core.exceptions.DbDriverException;
-import org.koreops.tauro.core.loggers.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -90,13 +87,7 @@ public abstract class AbstractScraper {
   public boolean scrape() {
     while (true) {
       if (ReachabilityUtil.isReachable()) {
-        try {
-          return this.scrapeAndLog();
-        } catch (DbDriverException ex) {
-          // Well, we can't go on now, can we?
-          Logger.error("Database Driver issue. Exiting...");
-          System.exit(255);
-        }
+        return this.scrapeAndLog();
       } else {
         try {
           Thread.sleep(1000);
@@ -107,5 +98,5 @@ public abstract class AbstractScraper {
     }
   }
 
-  public abstract boolean scrapeAndLog() throws DbDriverException;
+  public abstract boolean scrapeAndLog();
 }

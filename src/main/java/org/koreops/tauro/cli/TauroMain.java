@@ -23,11 +23,13 @@ import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.authtrial.threads.FormAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.opts.processor.CliOptsProcessor;
+import org.koreops.tauro.core.db.DbConnEngine;
 import org.koreops.tauro.core.loggers.Logger;
 import org.koreops.tauro.core.process.ProcessManager;
 import org.koreops.tauro.core.process.status.reporting.Mailer;
 
 import java.net.UnknownHostException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -153,7 +155,9 @@ public class TauroMain {
       Logger.info("Starting new batch: ", true);
       List<String> hostsList = Arrays.asList(hosts);
       mainObject = new TauroMain(hostsList, port);
-      mainObject.scanAndAttackHosts();
+      Connection connection = DbConnEngine.getConnection();
+
+      mainObject.scanAndAttackHosts(connection);
     } else {
       Logger.error("No hosts found to scan/attack.", true);
     }
@@ -170,7 +174,7 @@ public class TauroMain {
     }
   }
 
-  private void scanAndAttackHosts() throws InterruptedException {
+  private void scanAndAttackHosts(Connection connection) throws InterruptedException {
     List<String> hosts = generateHosts(this.hosts, exclusions);
 
     System.out.println(hosts.size());
@@ -186,24 +190,26 @@ public class TauroMain {
       checkedHosts.add(host);
       i++;
       if (i >= BATCH_SIZE) {
-        startCracking(futures, checkedHosts);
+        startCracking(futures, checkedHosts, connection);
         futures = new ArrayList<>();
         checkedHosts = new ArrayList<>();
         i = 0;
       }
     }
 
-    startCracking(futures, checkedHosts);
+    startCracking(futures, checkedHosts, connection);
 
     Logger.info("All batches done.", true);
   }
 
-  private void startCracking(List<Future<Host>> futures, List<String> checkedHosts) throws InterruptedException {
+  private void startCracking(List<Future<Host>> futures, List<String> checkedHosts, Connection connection) throws InterruptedException {
     int done = 0;
 
     Thread.sleep(2000);
     List<String> doneHosts = new ArrayList<>();
     List<Future<?>> attackFutures = new ArrayList<>();
+
+    UpdaterDao updaterDao = new UpdaterDao(connection);
 
     while (true) {
       if (done == futures.size()) {
@@ -229,9 +235,9 @@ public class TauroMain {
 
           Thread hostHandler;
           if (!host.isFormAuth()) {
-            hostHandler = new DefaultAuthTrial(host.getIp(), port);
+            hostHandler = new DefaultAuthTrial(host.getIp(), port, updaterDao);
           } else {
-            hostHandler = new FormAuthTrial(host.getIp(), port);
+            hostHandler = new FormAuthTrial(host.getIp(), port, updaterDao);
           }
           attackFutures.add(attackExecutorService.submit(hostHandler));
           doneHosts.add(host.getIp());

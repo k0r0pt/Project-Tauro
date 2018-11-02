@@ -18,15 +18,13 @@ package org.koreops.tauro.cli.scraper.basicauth;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
-import org.koreops.tauro.core.exceptions.DbDriverException;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -39,18 +37,18 @@ import java.util.logging.Level;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class DigiflipScraper extends AbstractScraper {
+public class DigiflipScraper extends AbstractScraperAndSaver {
 
-  public DigiflipScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+  public DigiflipScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return this.logDigiflipStation();
   }
 
-  private boolean logDigiflipStation() throws DbDriverException {
+  private boolean logDigiflipStation()  {
     try {
       boolean newRouter = false;
 
@@ -86,8 +84,6 @@ public class DigiflipScraper extends AbstractScraper {
     } catch (ElementNotFoundException ex) {
       Logger.error(host + ": ElementNotFoundException during getWirelessData(): " + ex.getMessage() + " ::::::: " + ex.toString());
       java.util.logging.Logger.getLogger(NewTpLinkScraper.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (DbDriverException ex) {
-      throw ex;
     } catch (Exception ex) {
       Logger.error(host + ": Exception during getWirelessData(): " + ex.getMessage() + " ::::::: " + ex.toString());
       java.util.logging.Logger.getLogger(NewTpLinkScraper.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,7 +91,7 @@ public class DigiflipScraper extends AbstractScraper {
     return false;
   }
 
-  private boolean logNewDigiflip(HtmlPage mainPage) throws IOException, InterruptedException, DbDriverException {
+  private boolean logNewDigiflip(HtmlPage mainPage) throws IOException, InterruptedException {
     Thread.sleep(1000);     // Let the javascript load the menu.
     ((HtmlPage) mainPage.getFrameByName("menu").getEnclosedPage()).getAnchorByName("sub24").click();
     Thread.sleep(1000);     // Let the javascript load the menu.
@@ -199,11 +195,11 @@ public class DigiflipScraper extends AbstractScraper {
     Logger.info(host + ": Found AuthType: " + wifiData.get("AuthType"));
     Logger.info(host + ": Found Encryption: " + wifiData.get("Encryption"));
 
-    UpdaterDao.saveStation(wifiData, host);
+    updaterDao.saveStation(wifiData, host);
     return true;
   }
 
-  private boolean logOldDigiflip(HtmlPage mainPage) throws IOException, InterruptedException, DbDriverException {
+  private boolean logOldDigiflip(HtmlPage mainPage) throws IOException, InterruptedException {
 
     String macAddr = null;
 
@@ -276,7 +272,7 @@ public class DigiflipScraper extends AbstractScraper {
     Logger.info(host + ": Found AuthType: " + wifiData.get("AuthType"));
     Logger.info(host + ": Found Encryption: " + wifiData.get("Encryption"));
 
-    UpdaterDao.saveStation(wifiData, host);
+    updaterDao.saveStation(wifiData, host);
 
     return true;
   }

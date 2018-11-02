@@ -25,6 +25,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.net.def.beans.Credentials;
+import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
 import org.koreops.tauro.cli.scraper.basicauth.BinatoneScraper;
 import org.koreops.tauro.cli.scraper.basicauth.CoshipScraper;
@@ -47,13 +48,15 @@ import java.net.URI;
  */
 public class DefaultAuthTrial extends AbstractAuthTrial {
 
+  private final UpdaterDao updaterDao;
+
   /**
    * Constructor for the Http Basic Auth Default Login trial.
-   *
    * @param host    The host that is being attacked
    * @param port    The port on which the HTTP server is running
+   * @param updaterDao The object responsible for Data Layer updates
    */
-  public DefaultAuthTrial(String host, String port) {
+  public DefaultAuthTrial(String host, String port, UpdaterDao updaterDao) {
     super();
     this.host = host;
     if (port != null) {
@@ -61,6 +64,7 @@ public class DefaultAuthTrial extends AbstractAuthTrial {
     } else {
       this.port = 80;
     }
+    this.updaterDao = updaterDao;
   }
 
   @Override
@@ -132,56 +136,56 @@ public class DefaultAuthTrial extends AbstractAuthTrial {
     boolean success;
 
     System.out.println("Trying Binatone Scraper.");
-    scraper = new BinatoneScraper(host, hostUrl, params);
+    scraper = new BinatoneScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying DLink Scraper.");
-    scraper = new DLinkScraper(host, hostUrl, params);
+    scraper = new DLinkScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying New iBall Baton Scraper.");
-    scraper = new NewIBallBatonScraper(host, hostUrl, params);
+    scraper = new NewIBallBatonScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying Digiflip Scraper.");
-    scraper = new DigiflipScraper(host, hostUrl, params);
+    scraper = new DigiflipScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying New TPLink Scraper.");
-    scraper = new NewTpLinkScraper(host, hostUrl, params);
+    scraper = new NewTpLinkScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying Old TPLink Scraper.");
-    scraper = new TpLinkScraper(host, hostUrl, params);
+    scraper = new TpLinkScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying COSHIP Scraper.");
-    scraper = new CoshipScraper(host, hostUrl, params);
+    scraper = new CoshipScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
     }
 
     System.out.println("Trying iBall iB-WRX300N Scraper.");
-    scraper = new IBallWrx300NScraper(host, hostUrl, params);
+    scraper = new IBallWrx300NScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;

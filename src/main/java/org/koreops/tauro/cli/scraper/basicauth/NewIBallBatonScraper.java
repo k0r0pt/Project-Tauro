@@ -23,8 +23,7 @@ import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.tauro.cli.authtrial.threads.DefaultAuthTrial;
 import org.koreops.tauro.cli.dao.UpdaterDao;
-import org.koreops.tauro.cli.scraper.AbstractScraper;
-import org.koreops.tauro.core.exceptions.DbDriverException;
+import org.koreops.tauro.cli.scraper.AbstractScraperAndSaver;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.io.IOException;
@@ -37,14 +36,14 @@ import java.util.logging.Level;
  *
  * @author Sudipto Sarkar (k0r0pt) (sudiptosarkar@visioplanet.org).
  */
-public class NewIBallBatonScraper extends AbstractScraper {
+public class NewIBallBatonScraper extends AbstractScraperAndSaver {
 
-  public NewIBallBatonScraper(String host, String hostUrl, AuthCrackParams params) {
-    super(host, hostUrl, params);
+  public NewIBallBatonScraper(String host, String hostUrl, AuthCrackParams params, UpdaterDao updaterDao) {
+    super(host, hostUrl, params, updaterDao);
   }
 
   @Override
-  public boolean scrapeAndLog() throws DbDriverException {
+  public boolean scrapeAndLog() {
     return this.logIBallBatonWirelessStation(hostUrl, base64Login);
   }
 
@@ -53,7 +52,7 @@ public class NewIBallBatonScraper extends AbstractScraper {
    *
    * @param base64Login This is for iBall Baton's 300M Wi-Fi Mini AP Router - iBWRR300N
    */
-  private boolean logIBallBatonWirelessStation(String hostUrl, String base64Login) throws DbDriverException {
+  private boolean logIBallBatonWirelessStation(String hostUrl, String base64Login) {
     try {
       System.out.println("Cracking iBall");
       StringBuilder macAddr = null;
@@ -96,7 +95,7 @@ public class NewIBallBatonScraper extends AbstractScraper {
       }
       wifiData.put("BSSID", macAddr.toString().toLowerCase());
 
-      UpdaterDao.saveStation(wifiData, host);
+      updaterDao.saveStation(wifiData, host);
       return true;
     } catch (HttpStatusException ex) {
       if ((ex.getStatusCode() != 404) && (ex.getStatusCode() != 501)) {
@@ -105,8 +104,6 @@ public class NewIBallBatonScraper extends AbstractScraper {
     } catch (IOException ex) {
       Logger.error(host + ": IOException during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (DbDriverException ex) {
-      throw ex;
     } catch (Exception ex) {
       Logger.error(host + ": Exception during logWirelessStation(): " + ex.getMessage() + " ::::::: " + ex.getLocalizedMessage());
       java.util.logging.Logger.getLogger(DefaultAuthTrial.class.getName()).log(Level.SEVERE, null, ex);

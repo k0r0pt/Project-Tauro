@@ -15,8 +15,6 @@
 
 package org.koreops.tauro.cli.dao;
 
-import org.koreops.tauro.core.db.DbConnEngine;
-import org.koreops.tauro.core.exceptions.DbDriverException;
 import org.koreops.tauro.core.loggers.Logger;
 
 import java.sql.Connection;
@@ -32,19 +30,21 @@ import java.util.Map;
  */
 public class UpdaterDao {
   private static String isp;
+  private final Connection conn;
+
+  public UpdaterDao(Connection conn) {
+    this.conn = conn;
+  }
 
   /**
    * Saves scraped Wifi station to the database.
    *
    * @param wifiData            A HashMap containing the Wifi Data (BSSID, SSID, Encryption and Key)
    * @param host                The Host for which the data is being saved (Will be used for logging purposes)
-   * @throws DbDriverException  In case of a JDBC Driver related problem (unlikely to happen).
    */
-  public static synchronized void saveStation(Map<String, String> wifiData, String host) throws DbDriverException {
+  public synchronized void saveStation(Map<String, String> wifiData, String host) {
     try {
       boolean stationExists;
-      Connection conn;
-      conn = DbConnEngine.getConnection();
       String sql;
       sql = "Select * from WirelessStations where lower(BSSID) = lower(?) and SSID = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);

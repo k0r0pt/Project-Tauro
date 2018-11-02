@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koreops.net.def.beans.AuthCrackParams;
 import org.koreops.net.def.beans.Credentials;
+import org.koreops.tauro.cli.dao.UpdaterDao;
 import org.koreops.tauro.cli.scraper.AbstractScraper;
 import org.koreops.tauro.cli.scraper.formauth.ActBeamScraper;
 import org.koreops.tauro.core.loggers.Logger;
@@ -40,14 +41,15 @@ import java.util.Map;
 public class FormAuthTrial extends AbstractAuthTrial {
 
   private final String hostUrl;
+  private final UpdaterDao updaterDao;
 
   /**
    * Constructor for the Form Based Auth Default Login trial.
-   *
    * @param host    The host that is being attacked
    * @param port    The port on which the HTTP server is running
+   * @param updaterDao The object responsible for Data Layer updates
    */
-  public FormAuthTrial(String host, String port) {
+  public FormAuthTrial(String host, String port, UpdaterDao updaterDao) {
     super();
     this.host = host;
     if (port != null) {
@@ -56,6 +58,7 @@ public class FormAuthTrial extends AbstractAuthTrial {
       this.port = 80;
     }
     hostUrl = this.forgeUrl("http://", this.host, this.port, "/");
+    this.updaterDao = updaterDao;
   }
 
   @Override
@@ -172,7 +175,7 @@ public class FormAuthTrial extends AbstractAuthTrial {
     boolean success;
 
     System.out.println("Trying ActBeam Scraper.");
-    scraper = new ActBeamScraper(host, hostUrl, params);
+    scraper = new ActBeamScraper(host, hostUrl, params, updaterDao);
     success = scraper.scrape();
     if (success) {
       return;
